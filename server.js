@@ -12,8 +12,7 @@ app.get('/api/products', async (req, res) => { try {
  const [rows] = await pool.query('SELECT * FROM products ORDER BY id DESC'); 
 res.json(rows); } catch (err) { console.error(err); res.status(500).json({ error: 'Erro ao listar produtos' }); } });
 // Inserir produto (body: { name, description, price }) 
-app.post('/api/products', async 
-(req, res) => { const { name, description, price } = req.body; if (!name || price === undefined) { return res.status(400).json({ error: 'name e price são obrigatórios' }); } 
+app.post('/api/products', async (req, res) => { const { name, description, price } = req.body; if (!name || price === undefined) { return res.status(400).json({ error: 'name e price são obrigatórios' }); } 
 try {
  const [result] = await pool.query( 'INSERT INTO products (name, description, price) VALUES (?, ?, ?)', [name, description || null, price] ); const insertedId = result.insertId; const [rows] = await pool.query('SELECT * FROM products WHERE id = ?', [insertedId]); res.status(201).json(rows[0]); } catch (err) { console.error(err); 
 res.status(500).json({ error: 'Erro ao inserir produto' }); } });
